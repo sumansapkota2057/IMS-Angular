@@ -15,7 +15,7 @@ export interface Post {
 
 export enum PostStatus {
   DRAFT = 'DRAFT',
-  PENDING_APPROVAL = 'PENDING_APPROVAL',
+  PENDING = 'PENDING',
   APPROVED = 'APPROVED',
   REJECTED = 'REJECTED',
   RESOLVED = 'RESOLVED'

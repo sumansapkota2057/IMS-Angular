@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth-guard';
+import { roleGuard } from './core/guards/role-guard';
 
 export const routes: Routes = [
 
@@ -11,5 +13,21 @@ export const routes: Routes = [
     path: 'register',
     loadComponent: () =>
       import('./features/auth/register/register.component').then(m => m.Register)
-  }
+  },
+
+  {
+    path: 'user-dashboard',
+    loadComponent: () => import('./features/user-dashboard/user-dashboard').then(m => m.UserDashboard),
+    canActivate: [authGuard]
+  },
+
+   {
+    path: 'admin-dashboard',
+    loadComponent: () => import('./features/admin-dashboard/admin-dashboard').then(m => m.AdminDashboard),
+    canActivate: [authGuard, roleGuard],
+    data: { role: 'ROLE_ADMIN' }
+  },
+   { path: '**', redirectTo: '/login' }
 ];
+
+

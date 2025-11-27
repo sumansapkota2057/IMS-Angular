@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environment/environment';
 import { HttpClient } from '@angular/common/http';
-
 import { Observable } from 'rxjs';
-import { CommentCreateRequest } from '../model/comment.model';
+import { Comment, CommentCreateRequest } from '../model/comment.model';
 import { ApiResponse } from '../model/api-response.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class Comment {
+export class CommentService {
   private apiUrl = `${environment.apiUrl}/api/comments`;
 
   constructor(private http: HttpClient) {}
@@ -19,7 +18,8 @@ export class Comment {
   }
 
   getCommentsByPost(postId: number): Observable<ApiResponse<Comment[]>> {
-    return this.http.get<ApiResponse<Comment[]>>(`${this.apiUrl}/post/${postId}`);
+    return this.http.get<ApiResponse<Comment[]>>(
+      `${this.apiUrl}/post/${postId}`
+    );
   }
-  
 }

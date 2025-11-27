@@ -1,1 +1,176 @@
-<p>stats-overview works!</p>
+<div class="stats-container">
+  <div class="header-section">
+    <div>
+      <h1 class="page-title">Dashboard Overview</h1>
+      <p class="page-subtitle">Monitor system statistics and activity</p>
+    </div>
+    <button mat-raised-button color="primary" (click)="refreshStats()" [disabled]="loading">
+      <mat-icon>refresh</mat-icon>
+      Refresh
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading statistics...</p>
+  </div>
+
+  <div *ngIf="!loading && stats" class="stats-grid">
+    <!-- Posts Stats -->
+    <mat-card class="stat-card stat-card-primary">
+      <mat-card-content>
+        <div class="stat-icon">
+          <mat-icon>article</mat-icon>
+        </div>
+        <div class="stat-info">
+          <h2 class="stat-value">{{ stats.totalPosts }}</h2>
+          <p class="stat-label">Total Posts</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card stat-card-warning">
+      <mat-card-content>
+        <div class="stat-icon">
+          <mat-icon>pending</mat-icon>
+        </div>
+        <div class="stat-info">
+          <h2 class="stat-value">{{ stats.pendingApprovalPosts }}</h2>
+          <p class="stat-label">Pending Approval</p>
+        </div>
+      </mat-card-content>
+      <mat-card-actions *ngIf="stats.pendingApprovalPosts > 0">
+        <span class="alert-badge">
+          <mat-icon>warning</mat-icon>
+          Needs Attention
+        </span>
+      </mat-card-actions>
+    </mat-card>
+
+    <mat-card class="stat-card stat-card-success">
+      <mat-card-content>
+        <div class="stat-icon">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div class="stat-info">
+          <h2 class="stat-value">{{ stats.approvedPosts }}</h2>
+          <p class="stat-label">Approved Posts</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card stat-card-danger">
+      <mat-card-content>
+        <div class="stat-icon">
+          <mat-icon>cancel</mat-icon>
+        </div>
+        <div class="stat-info">
+          <h2 class="stat-value">{{ stats.rejectedPosts }}</h2>
+          <p class="stat-label">Rejected Posts</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card stat-card-info">
+      <mat-card-content>
+        <div class="stat-icon">
+          <mat-icon>task_alt</mat-icon>
+        </div>
+        <div class="stat-info">
+          <h2 class="stat-value">{{ stats.resolvedPosts }}</h2>
+          <p class="stat-label">Resolved Posts</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Users Stats -->
+    <mat-card class="stat-card stat-card-primary">
+      <mat-card-content>
+        <div class="stat-icon">
+          <mat-icon>people</mat-icon>
+        </div>
+        <div class="stat-info">
+          <h2 class="stat-value">{{ stats.totalUsers }}</h2>
+          <p class="stat-label">Total Users</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card stat-card-success">
+      <mat-card-content>
+        <div class="stat-icon">
+          <mat-icon>person</mat-icon>
+        </div>
+        <div class="stat-info">
+          <h2 class="stat-value">{{ stats.activeUsers }}</h2>
+          <p class="stat-label">Active Users</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="stat-card stat-card-secondary">
+      <mat-card-content>
+        <div class="stat-icon">
+          <mat-icon>person_off</mat-icon>
+        </div>
+        <div class="stat-info">
+          <h2 class="stat-value">{{ stats.inactiveUsers }}</h2>
+          <p class="stat-label">Inactive Users</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div *ngIf="!loading && stats" class="charts-section">
+    <mat-card class="chart-card">
+      <mat-card-header>
+        <mat-card-title>Posts Distribution</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="distribution-chart">
+          <div class="chart-item">
+            <div class="chart-bar" 
+                 [style.width.%]="(stats.pendingApprovalPosts / stats.totalPosts) * 100"
+                 style="background-color: #ff9800;"></div>
+            <span>Pending: {{ stats.pendingApprovalPosts }}</span>
+          </div>
+          <div class="chart-item">
+            <div class="chart-bar" 
+                 [style.width.%]="(stats.approvedPosts / stats.totalPosts) * 100"
+                 style="background-color: #4caf50;"></div>
+            <span>Approved: {{ stats.approvedPosts }}</span>
+          </div>
+          <div class="chart-item">
+            <div class="chart-bar" 
+                 [style.width.%]="(stats.rejectedPosts / stats.totalPosts) * 100"
+                 style="background-color: #f44336;"></div>
+            <span>Rejected: {{ stats.rejectedPosts }}</span>
+          </div>
+          <div class="chart-item">
+            <div class="chart-bar" 
+                 [style.width.%]="(stats.resolvedPosts / stats.totalPosts) * 100"
+                 style="background-color: #2196f3;"></div>
+            <span>Resolved: {{ stats.resolvedPosts }}</span>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="info-card-large">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>lightbulb</mat-icon>
+          Quick Tips
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul class="tips-list">
+          <li>Review pending posts regularly to maintain user engagement</li>
+          <li>Add meaningful admin notes when rejecting posts</li>
+          <li>Mark posts as resolved once issues are addressed</li>
+          <li>Monitor user activity to identify community trends</li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

@@ -1,1 +1,164 @@
-<p>manage-posts works!</p>
+<div class="manage-posts-container">
+  <div class="header-section">
+    <div>
+      <h1 class="page-title">Manage Posts</h1>
+      <p class="page-subtitle">Review and manage all posts in the system</p>
+    </div>
+    <button mat-raised-button color="primary" (click)="loadAllPosts()" [disabled]="loading">
+      <mat-icon>refresh</mat-icon>
+      Refresh
+    </button>
+  </div>
+
+  <!-- Status Filters -->
+  <mat-card class="filters-card">
+    <mat-card-content>
+      <div class="status-filters">
+        <button 
+          *ngFor="let filter of statusFilters"
+          mat-stroked-button 
+          [class.active]="filterStatus === filter.value"
+          (click)="onFilterChange(filter.value)">
+          {{ filter.label }}
+          <mat-chip [highlighted]="filterStatus === filter.value">{{ filter.count }}</mat-chip>
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading posts...</p>
+  </div>
+
+  <div *ngIf="!loading && filteredPosts.length === 0" class="empty-state">
+    <mat-icon>inbox</mat-icon>
+    <h3>No posts found</h3>
+    <p>There are no posts matching the selected filter.</p>
+  </div>
+
+  <!-- Posts List View -->
+  <div *ngIf="!loading && filteredPosts.length > 0 && !selectedPost" class="posts-list">
+    <mat-card *ngFor="let post of filteredPosts" class="post-card" (click)="viewPost(post)">
+      <mat-card-header>
+        <div class="post-header-content">
+          <div class="post-main-info">
+            <h3 class="post-title">{{ post.title }}</h3>
+            <div class="post-meta">
+              <mat-chip>{{ post.type.replace('_', ' ') }}</mat-chip>
+              <span class="meta-item">
+                <mat-icon>person</mat-icon>
+                {{ post.user?.username || 'Unknown' }}
+              </span>
+              <span class="meta-item">
+                <mat-icon>schedule</mat-icon>
+                {{ post.createdAt | date: 'short' }}
+              </span>
+            </div>
+          </div>
+          <mat-chip [color]="getStatusColor(post.status)">
+            <mat-icon>{{ getStatusIcon(post.status) }}</mat-icon>
+            {{ post.status.replace('_', ' ') }}
+          </mat-chip>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <p class="post-preview">{{ post.description | slice:0:120 }}...</p>
+      </mat-card-content>
+
+      <mat-card-actions>
+        <button mat-button color="primary">
+          <mat-icon>visibility</mat-icon>
+          View Details
+        </button>
+        <span class="action-count" *ngIf="getAvailableActions(post).length > 0">
+          {{ getAvailableActions(post).length }} actions available
+        </span>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <!-- Post Detail View -->
+  <div *ngIf="selectedPost" class="post-detail">
+    <mat-card class="detail-card">
+      <mat-card-header>
+        <button mat-icon-button (click)="closePostView()" class="back-button">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <div class="detail-header">
+          <div>
+            <mat-card-title>{{ selectedPost.title }}</mat-card-title>
+            <mat-card-subtitle>
+              <mat-chip>{{ selectedPost.type.replace('_', ' ') }}</mat-chip>
+              <span class="meta-item">
+                <mat-icon>person</mat-icon>
+                {{ selectedPost.user?.username || 'Unknown' }}
+              </span>
+              <span class="meta-item">
+                <mat-icon>schedule</mat-icon>
+                {{ selectedPost.createdAt | date: 'medium' }}
+              </span>
+            </mat-card-subtitle>
+          </div>
+          <mat-chip [color]="getStatusColor(selectedPost.status)">
+            <mat-icon>{{ getStatusIcon(selectedPost.status) }}</mat-icon>
+            {{ selectedPost.status.replace('_', ' ') }}
+          </mat-chip>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="post-content-section">
+          <h3>
+            <mat-icon>description</mat-icon>
+            Description
+          </h3>
+          <p class="post-description">{{ selectedPost.description }}</p>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="admin-section">
+          <h3>
+            <mat-icon>admin_panel_settings</mat-icon>
+            Admin Actions
+          </h3>
+          
+          <form [formGroup]="notesForm">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Admin Notes</mat-label>
+              <textarea 
+                matInput 
+                formControlName="notes" 
+                placeholder="Add notes about this post (visible to the author)"
+                rows="4"></textarea>
+              <mat-hint>These notes will be visible to the post author</mat-hint>
+            </mat-form-field>
+          </form>
+
+          <div *ngIf="selectedPost.adminNotes" class="existing-notes">
+            <strong>Previous Admin Notes:</strong>
+            <p>{{ selectedPost.adminNotes }}</p>
+          </div>
+
+          <div class="action-buttons">
+            <button 
+              *ngFor="let action of getAvailableActions(selectedPost)"
+              mat-raised-button 
+              [color]="action.color"
+              (click)="changeStatus(selectedPost, action.status)">
+              <mat-icon>{{ action.icon }}</mat-icon>
+              {{ action.label }}
+            </button>
+          </div>
+
+          <div *ngIf="getAvailableActions(selectedPost).length === 0" class="no-actions">
+            <mat-icon>info</mat-icon>
+            <p>No actions available for posts with status: {{ selectedPost.status.replace('_', ' ') }}</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
