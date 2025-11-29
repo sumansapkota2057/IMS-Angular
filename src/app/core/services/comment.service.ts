@@ -22,4 +22,7 @@ export class CommentService {
       `${this.apiUrl}/post/${postId}`
     );
   }
+  deleteComment(commentId: number): Observable<ApiResponse<void>> {
+    return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${commentId}`);
+  }
 }

@@ -24,6 +24,8 @@ export class ApprovedPost  implements OnInit {
   commentForm: FormGroup;
   loadingComments = false;
 
+  currentUser: string = '';
+
   constructor(
     private postService: PostService,
     private commentService: CommentService,
@@ -37,7 +39,9 @@ export class ApprovedPost  implements OnInit {
 
   ngOnInit(): void {
     this.loadApprovedPosts();
+     this.currentUser = sessionStorage.getItem('username') || ''; this.currentUser = sessionStorage.getItem('username') || '';
   }
+  
 
   loadApprovedPosts(): void {
     this.loading = true;
@@ -97,5 +101,21 @@ export class ApprovedPost  implements OnInit {
       });
     }
   }
+
+  deleteComment(commentId: number) {
+  if (!confirm('Are you sure you want to delete this comment?')) return;
+
+  this.commentService.deleteComment(commentId).subscribe({
+    next: () => {
+      
+      this.comments = this.comments.filter(c => c.id !== commentId);
+      this.snackBar.open('Comment deleted', 'Close', { duration: 2000 });
+    },
+    error: (err) => {
+      console.error(err);
+      this.snackBar.open('Failed to delete comment', 'Close', { duration: 2000 });
+    }
+  });
+}
 
 }

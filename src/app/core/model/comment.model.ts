@@ -5,7 +5,7 @@ export interface Comment {
   id?: number;
   content: string;
   post?: Post;
-  user?: User;
+  username: string
   createdAt?: string;
 }
 

@@ -69,8 +69,9 @@ export class PostService {
   }
 
   getAllPosts(): Observable<ApiResponse<any[]>> {
-    return this.http.get<ApiResponse<any[]>>(this.apiUrl);
-  }
+  return this.http.get<ApiResponse<any[]>>(`${this.apiUrl}/all`);
+}
+
 
   getPostById(id: number): Observable<ApiResponse<any>> {
     return this.http.get<ApiResponse<any>>(`${this.apiUrl}/${id}`);
