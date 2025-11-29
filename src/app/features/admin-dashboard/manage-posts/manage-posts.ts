@@ -8,7 +8,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
 
-
 interface StatusAction {
   status: PostStatus;
   label: string;
@@ -17,7 +16,7 @@ interface StatusAction {
 }
 
 @Component({
-   selector: 'app-manage-posts',
+  selector: 'app-manage-posts',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MaterialModule],
   templateUrl: './manage-posts.html',
@@ -40,7 +39,6 @@ export class ManagePosts implements OnInit {
 
   statusFilters = [
     { value: 'ALL', label: 'All Posts', count: 0 },
-    { value: 'DRAFT', label: 'Draft', count: 0 },
     { value: 'PENDING', label: 'Pending Approval', count: 0 },
     { value: 'APPROVED', label: 'Approved', count: 0 },
     { value: 'REJECTED', label: 'Rejected', count: 0 },
@@ -71,7 +69,7 @@ export class ManagePosts implements OnInit {
         this.applyFilter();
         this.loading = false;
       },
-      error: (error) => {
+      error: () => {
         this.snackBar.open('Failed to load posts', 'Close', { duration: 3000 });
         this.loading = false;
       }
@@ -79,19 +77,20 @@ export class ManagePosts implements OnInit {
   }
 
   updateStatusCounts(): void {
-    this.statusFilters[0].count = this.posts.length; // ALL
-    this.statusFilters[1].count = this.posts.filter(p => p.status === PostStatus.DRAFT).length;
-    this.statusFilters[2].count = this.posts.filter(p => p.status === PostStatus.PENDING).length;
-    this.statusFilters[3].count = this.posts.filter(p => p.status === PostStatus.APPROVED).length;
-    this.statusFilters[4].count = this.posts.filter(p => p.status === PostStatus.REJECTED).length;
-    this.statusFilters[5].count = this.posts.filter(p => p.status === PostStatus.RESOLVED).length;
+    const postsWithoutDraft = this.posts.filter(p => p.status !== PostStatus.DRAFT);
+    this.statusFilters[0].count = postsWithoutDraft.length;
+    this.statusFilters[1].count = postsWithoutDraft.filter(p => p.status === PostStatus.PENDING).length;
+    this.statusFilters[2].count = postsWithoutDraft.filter(p => p.status === PostStatus.APPROVED).length;
+    this.statusFilters[3].count = postsWithoutDraft.filter(p => p.status === PostStatus.REJECTED).length;
+    this.statusFilters[4].count = postsWithoutDraft.filter(p => p.status === PostStatus.RESOLVED).length;
   }
 
   applyFilter(): void {
+    const postsWithoutDraft = this.posts.filter(p => p.status !== PostStatus.DRAFT);
     if (this.filterStatus === 'ALL') {
-      this.filteredPosts = [...this.posts];
+      this.filteredPosts = [...postsWithoutDraft];
     } else {
-      this.filteredPosts = this.posts.filter(post => post.status === this.filterStatus);
+      this.filteredPosts = postsWithoutDraft.filter(post => post.status === this.filterStatus);
     }
   }
 
@@ -146,12 +145,12 @@ export class ManagePosts implements OnInit {
         }
 
         apiCall.subscribe({
-          next: (response) => {
+          next: () => {
             this.snackBar.open(`Post ${statusLabels[newStatus]}d successfully`, 'Close', { duration: 3000 });
             this.closePostView();
             this.loadAllPosts();
           },
-          error: (error) => {
+          error: () => {
             this.snackBar.open(`Failed to ${statusLabels[newStatus]} post`, 'Close', { duration: 3000 });
           }
         });
@@ -170,8 +169,7 @@ export class ManagePosts implements OnInit {
 
   getStatusColor(status: PostStatus): string {
     const colors: { [key: string]: string } = {
-      'DRAFT': 'accent',
-      'PENDING_APPROVAL': 'primary',
+      'PENDING': 'primary',
       'APPROVED': 'primary',
       'REJECTED': 'warn',
       'RESOLVED': 'primary'
@@ -181,13 +179,11 @@ export class ManagePosts implements OnInit {
 
   getStatusIcon(status: PostStatus): string {
     const icons: { [key: string]: string } = {
-      'DRAFT': 'edit',
-      'PENDING_APPROVAL': 'pending',
+      'PENDING': 'pending',
       'APPROVED': 'check_circle',
       'REJECTED': 'cancel',
       'RESOLVED': 'task_alt'
     };
     return icons[status] || 'info';
   }
-
 }

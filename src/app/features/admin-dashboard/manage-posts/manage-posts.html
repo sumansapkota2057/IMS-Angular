@@ -10,7 +10,6 @@
     </button>
   </div>
 
-  <!-- Status Filters -->
   <mat-card class="filters-card">
     <mat-card-content>
       <div class="status-filters">
@@ -37,7 +36,6 @@
     <p>There are no posts matching the selected filter.</p>
   </div>
 
-  <!-- Posts List View -->
   <div *ngIf="!loading && filteredPosts.length > 0 && !selectedPost" class="posts-list">
     <mat-card *ngFor="let post of filteredPosts" class="post-card" (click)="viewPost(post)">
       <mat-card-header>
@@ -79,7 +77,6 @@
     </mat-card>
   </div>
 
-  <!-- Post Detail View -->
   <div *ngIf="selectedPost" class="post-detail">
     <mat-card class="detail-card">
       <mat-card-header>
