@@ -1,4 +1,3 @@
-
 .approved-posts-container {
   animation: fadeIn 0.5s ease-in;
   padding: 20px;
@@ -10,7 +9,6 @@
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
 
 .header-card {
   margin-bottom: 32px;
@@ -31,7 +29,6 @@ mat-card-subtitle {
   font-size: 14px;
 }
 
-
 .loading-container, .empty-state {
   display: flex;
   flex-direction: column;
@@ -48,24 +45,27 @@ mat-card-subtitle {
   margin-bottom: 16px;
 }
 
-
-.posts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 24px;
+/* Posts List */
+.posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 32px; /* increased gap between posts */
 }
 
+/* Post Card */
 .post-card {
   cursor: pointer;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
   border-radius: 12px;
+  padding: 16px;
+  background-color: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
 
 .post-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
-
 
 .post-card mat-card-subtitle {
   display: flex;
@@ -86,10 +86,10 @@ mat-card-subtitle {
 .post-preview {
   line-height: 1.6;
   color: #555;
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
-
+/* Post Detail */
 .post-detail {
   max-width: 900px;
   margin: 0 auto;
@@ -99,6 +99,7 @@ mat-card-subtitle {
   margin-bottom: 32px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  padding: 20px;
 }
 
 .back-button {
@@ -112,7 +113,7 @@ mat-card-subtitle {
   color: #333;
 }
 
-
+/* Comments Card */
 .comments-card {
   margin-bottom: 32px;
   border-radius: 12px;
@@ -137,7 +138,6 @@ mat-card-subtitle {
   margin-bottom: 12px;
 }
 
-
 .loading-comments {
   display: flex;
   align-items: center;
@@ -145,7 +145,6 @@ mat-card-subtitle {
   padding: 16px 0;
   justify-content: center;
 }
-
 
 .no-comments {
   text-align: center;
@@ -158,7 +157,6 @@ mat-card-subtitle {
   color: #ccc;
   margin-bottom: 12px;
 }
-
 
 .comments-list {
   display: flex;
@@ -207,9 +205,11 @@ mat-card-subtitle {
   white-space: pre-wrap;
 }
 
-
 @media (max-width: 768px) {
-  .posts-grid {
-    grid-template-columns: 1fr;
+  .posts-list {
+    gap: 20px;
+  }
+  .post-card, .detail-card {
+    padding: 14px;
   }
 }

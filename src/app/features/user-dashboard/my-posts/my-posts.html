@@ -1,105 +1,106 @@
-    <p>my-posts works!</p>
-    <div class="my-posts-container">
-      <mat-card class="header-card">
-        <mat-card-header>
-          <mat-card-title>
-            <mat-icon>article</mat-icon>
-            My Posts
-          </mat-card-title>
-          <mat-card-subtitle>Manage your submitted posts</mat-card-subtitle>
-        </mat-card-header>
-      </mat-card>
+<div class="my-posts-container">
 
-      <div *ngIf="loading" class="loading-container">
-        <mat-spinner></mat-spinner>
-        <p>Loading your posts...</p>
-      </div>
+  <!-- Header -->
+  <mat-card class="header-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>article</mat-icon>
+        My Posts
+      </mat-card-title>
+    </mat-card-header>
+  </mat-card>
 
-      <div *ngIf="!loading && posts.length === 0" class="empty-state">
-        <mat-icon>inbox</mat-icon>
-        <h3>No posts yet</h3>
-        <p>Create your first post to get started!</p>
-      </div>
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading your posts...</p>
+  </div>
 
-      <div *ngIf="!loading && posts.length > 0" class="posts-grid">
-        <mat-card *ngFor="let post of posts" class="post-card">
-          <mat-card-header>
-            <mat-card-title>
-              <span class="post-title">{{ post.title }}</span>
-             <mat-chip [color]="getStatusColor(post.status)">
-  <mat-icon>{{ getStatusIcon(post.status) }}</mat-icon>
-  {{ post.status }}
-</mat-chip>
+  <!-- Empty State -->
+  <div *ngIf="!loading && posts.length === 0" class="empty-state">
+    <mat-icon>inbox</mat-icon>
+    <h3>No posts yet</h3>
+    <p>Create your first post to get started!</p>
+  </div>
 
-            </mat-card-title>
-            <mat-card-subtitle>
-  <mat-chip>{{ post.type }}</mat-chip>
-  <span class="post-date">{{ post.createdAt | date: 'medium' }}</span>
-</mat-card-subtitle>
+  <!-- Posts List -->
+  <div *ngIf="!loading && posts.length > 0" class="posts-list">
+    <mat-card *ngFor="let post of posts" class="post-card">
+      <mat-card-header>
+        <mat-card-title>
+          <span class="post-title">{{ post.title }}</span>
+          <mat-chip [color]="getStatusColor(post.status)">
+            <mat-icon>{{ getStatusIcon(post.status) }}</mat-icon>
+            {{ post.status }}
+          </mat-chip>
+        </mat-card-title>
+        <mat-card-subtitle>
+          <mat-chip>{{ post.type }}</mat-chip>
+          <span class="post-date">{{ post.createdAt | date: 'medium' }}</span>
+        </mat-card-subtitle>
+      </mat-card-header>
 
-          </mat-card-header>
+      <mat-card-content>
+        <!-- View Post -->
+        <div *ngIf="editingPost?.id !== post.id">
+          <p class="post-description">{{ post.description }}</p>
 
-          <mat-card-content>
-            <div *ngIf="editingPost?.id !== post.id">
-              <p class="post-description">{{ post.description }}</p>
-              
-              <div *ngIf="post.adminNotes" class="admin-notes">
-                <mat-icon>note</mat-icon>
-                <div>
-                  <strong>Admin Notes:</strong>
-                  <p>{{ post.adminNotes }}</p>
-                </div>
-              </div>
+          <div *ngIf="post.adminNotes" class="admin-notes">
+            <mat-icon>note</mat-icon>
+            <div>
+              <strong>Admin Notes:</strong>
+              <p>{{ post.adminNotes }}</p>
             </div>
+          </div>
+        </div>
 
-            <div *ngIf="editingPost?.id === post.id" class="edit-form">
-              <form [formGroup]="updateForm">
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Title</mat-label>
-                  <input matInput formControlName="title">
-                  <mat-error *ngIf="updateForm.get('title')?.hasError('required')">
-                    Title is required
-                  </mat-error>
-                </mat-form-field>
+        <!-- Edit Post -->
+        <div *ngIf="editingPost?.id === post.id" class="edit-form">
+          <form [formGroup]="updateForm">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Title</mat-label>
+              <input matInput formControlName="title">
+              <mat-error *ngIf="updateForm.get('title')?.hasError('required')">
+                Title is required
+              </mat-error>
+            </mat-form-field>
 
-                <mat-form-field appearance="outline" class="full-width">
-                  <mat-label>Description</mat-label>
-                  <textarea matInput formControlName="description" rows="4"></textarea>
-                  <mat-error *ngIf="updateForm.get('description')?.hasError('required')">
-                    Description is required
-                  </mat-error>
-                </mat-form-field>
-              </form>
-            </div>
-          </mat-card-content>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Description</mat-label>
+              <textarea matInput formControlName="description" rows="4"></textarea>
+              <mat-error *ngIf="updateForm.get('description')?.hasError('required')">
+                Description is required
+              </mat-error>
+            </mat-form-field>
+          </form>
+        </div>
+      </mat-card-content>
 
-          <mat-card-actions>
-            <div *ngIf="editingPost?.id !== post.id">
-              <button mat-button *ngIf="post.status === PostStatus.DRAFT" (click)="startEdit(post)">
-                <mat-icon>edit</mat-icon>
-                Edit
-              </button>
+      <!-- Actions -->
+      <mat-card-actions>
+        <div *ngIf="editingPost?.id !== post.id">
+          <button mat-button *ngIf="post.status === PostStatus.DRAFT" (click)="startEdit(post)">
+            <mat-icon>edit</mat-icon>
+            Edit
+          </button>
+          <button mat-raised-button color="primary"
+            *ngIf="post.status === PostStatus.DRAFT"
+            (click)="submitForApproval(post)">
+            Submit for Approval
+          </button>
+        </div>
 
-              
-              <button mat-raised-button color="primary" 
-        *ngIf="post.status === PostStatus.DRAFT"
-        (click)="submitForApproval(post)">
-  Submit for Approval
-</button>
-
-            </div>
-
-            <div *ngIf="editingPost?.id === post.id" class="edit-actions">
-              <button mat-button (click)="cancelEdit()">
-                <mat-icon>close</mat-icon>
-                Cancel
-              </button>
-              <button mat-raised-button color="primary" (click)="saveEdit()">
-                <mat-icon>save</mat-icon>
-                Save Changes
-              </button>
-            </div>
-          </mat-card-actions>
-        </mat-card>
-      </div>
-    </div>
+        <div *ngIf="editingPost?.id === post.id" class="edit-actions">
+          <button mat-button (click)="cancelEdit()">
+            <mat-icon>close</mat-icon>
+            Cancel
+          </button>
+          <button mat-raised-button color="primary" (click)="saveEdit()">
+            <mat-icon>save</mat-icon>
+            Save Changes
+          </button>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

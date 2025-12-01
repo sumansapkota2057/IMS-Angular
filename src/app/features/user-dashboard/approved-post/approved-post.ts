@@ -46,10 +46,12 @@ export class ApprovedPost  implements OnInit {
   loadApprovedPosts(): void {
     this.loading = true;
     this.postService.getApprovedPosts().subscribe({
-      next: (response) => {
-        this.posts = response.data || [];
-        this.loading = false;
-      },
+      next: (response) =>{
+      this.posts = (response.data || []).sort((a, b) => {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      });
+      this.loading = false;
+    },
       error: (error) => {
         this.snackBar.open('Failed to load posts', 'Close', { duration: 3000 });
         this.loading = false;

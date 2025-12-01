@@ -91,12 +91,13 @@
 }
 
 .posts-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 20px;
 }
 
 .post-card {
+  width: 100%;
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -307,10 +308,6 @@ mat-divider {
 }
 
 @media (max-width: 768px) {
-  .posts-list {
-    grid-template-columns: 1fr;
-  }
-
   .page-title {
     font-size: 24px;
   }

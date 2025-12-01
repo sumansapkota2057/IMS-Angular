@@ -18,7 +18,6 @@
         <span>Profile</span>
       </button>
       <mat-divider></mat-divider>
-
       <button mat-menu-item (click)="logout()">
         <mat-icon>exit_to_app</mat-icon>
         <span>Logout</span>
@@ -28,68 +27,47 @@
 
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav [opened]="sidenavOpened" [mode]="sidenavOpened ? 'side' : 'over'" class="sidenav">
-
       <mat-nav-list>
         <a mat-list-item (click)="selectView('home')" [class.active]="selectedView === 'home'">
           <mat-icon matListItemIcon>home</mat-icon>
           <span matListItemTitle>Home</span>
         </a>
-
         <a mat-list-item (click)="selectView('create')" [class.active]="selectedView === 'create'">
           <mat-icon matListItemIcon>add_circle</mat-icon>
           <span matListItemTitle>Create Post</span>
         </a>
-
         <a mat-list-item (click)="selectView('my-posts')" [class.active]="selectedView === 'my-posts'">
           <mat-icon matListItemIcon>article</mat-icon>
           <span matListItemTitle>My Posts</span>
         </a>
-
-       
       </mat-nav-list>
-
     </mat-sidenav>
 
     <mat-sidenav-content class="main-content">
       <div class="content-wrapper">
 
-
-        <div *ngIf="selectedView === 'home'" class="welcome-section">
-            <mat-card class="welcome-card">
-              <mat-card-header>
-                <mat-card-title>
-                  <mat-icon class="welcome-icon">waving_hand</mat-icon>
-                  Welcome, {{ currentUser }}!
-                </mat-card-title>
-              </mat-card-header>
-
-              <mat-card-content>
-
-
-                <div class="quick-actions">
-
-                </div>
-              </mat-card-content>
-            </mat-card>
+  
+        <div *ngIf="selectedView === 'home'" class="home-section">
+          <mat-card class="welcome-card">
+            <mat-card-header>
+              <mat-card-title>
+                <mat-icon class="welcome-icon">waving_hand</mat-icon>
+                Welcome, {{ currentUser }}!
+              </mat-card-title>
+            </mat-card-header>
+          
+          </mat-card>
 
           <div class="all-post-section">
-            <div>
-              <h2>Latest Approved Posts</h2>
-              <app-approved-posts></app-approved-posts>
-            </div>
-
-            <div *ngIf="errorMessage" class="error-text">
-              {{ errorMessage }}
-            </div>
+            <app-approved-posts></app-approved-posts>
           </div>
         </div>
 
-
+      
         <app-create-post *ngIf="selectedView === 'create'"></app-create-post>
 
+       
         <app-my-posts *ngIf="selectedView === 'my-posts'"></app-my-posts>
-
-
 
       </div>
     </mat-sidenav-content>

@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialog } from '../../../shared/components/confirm-dialog/confirm-dialog';
 
+
 interface StatusAction {
   status: PostStatus;
   label: string;
@@ -49,11 +50,14 @@ export class ManagePosts implements OnInit {
     private postService: PostService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+   
   ) {
     this.notesForm = this.fb.group({
       notes: ['']
     });
+  
+
   }
 
   ngOnInit(): void {
@@ -84,6 +88,8 @@ export class ManagePosts implements OnInit {
     this.statusFilters[3].count = postsWithoutDraft.filter(p => p.status === PostStatus.REJECTED).length;
     this.statusFilters[4].count = postsWithoutDraft.filter(p => p.status === PostStatus.RESOLVED).length;
   }
+
+  
 
   applyFilter(): void {
     const postsWithoutDraft = this.posts.filter(p => p.status !== PostStatus.DRAFT);

@@ -40,18 +40,21 @@
     }
 
     loadMyPosts(): void {
-      this.loading = true;
-      this.postService.getMyPosts().subscribe({
-        next: (response) => {
-          this.posts = response.data || [];
-          this.loading = false;
-        },
-        error: (error) => {
-          this.snackBar.open('Failed to load posts', 'Close', { duration: 3000 });
-          this.loading = false;
-        }
+  this.loading = true;
+  this.postService.getMyPosts().subscribe({
+    next: (response) => {
+      this.posts = (response.data || []).sort((a, b) => {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
       });
+      this.loading = false;
+    },
+    error: (error) => {
+      this.snackBar.open('Failed to load posts', 'Close', { duration: 3000 });
+      this.loading = false;
     }
+  });
+}
+
 
  submitForApproval(post: Post) {
   console.log("CLICKED", post);
