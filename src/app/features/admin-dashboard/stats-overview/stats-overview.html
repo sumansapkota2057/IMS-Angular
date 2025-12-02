@@ -1,9 +1,6 @@
 <div class="stats-container">
   <div class="header-section">
-    <div>
-      <h1 class="page-title">Dashboard Overview</h1>
-     
-    </div>
+    <h1 class="page-title">Dashboard Overview</h1>
     <button mat-raised-button color="primary" (click)="refreshStats()" [disabled]="loading">
       <mat-icon>refresh</mat-icon>
       Refresh
@@ -16,74 +13,56 @@
   </div>
 
   <div *ngIf="!loading && stats" class="stats-grid">
-    <!-- Posts Stats -->
-    <mat-card class="stat-card stat-card-primary">
-      <mat-card-content>
-        <div class="stat-icon">
-          <mat-icon>article</mat-icon>
-        </div>
+    <!-- Pending Posts -->
+    <mat-card class="stat-card warning mat-elevation-z3">
+      <mat-card-content class="card-content">
+        <div class="stat-icon"><mat-icon>pending</mat-icon></div>
         <div class="stat-info">
-          <h2 class="stat-value">{{ stats.totalPosts }}</h2>
-          <p class="stat-label">Total Posts</p>
+          <h2>{{ stats.pendingApprovalPosts }}</h2>
+          <p>Pending Approval</p>
         </div>
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="stat-card stat-card-warning">
-      <mat-card-content>
-        <div class="stat-icon">
-          <mat-icon>pending</mat-icon>
-        </div>
+    <!-- Approved Posts -->
+    <mat-card class="stat-card success mat-elevation-z3" (click)="onApprovedClick()">
+      <mat-card-content class="card-content">
+        <div class="stat-icon"><mat-icon>check_circle</mat-icon></div>
         <div class="stat-info">
-          <h2 class="stat-value">{{ stats.pendingApprovalPosts }}</h2>
-          <p class="stat-label">Pending Approval</p>
+          <h2>{{ stats.approvedPosts }}</h2>
+          <p>Approved Posts</p>
         </div>
       </mat-card-content>
-      <mat-card-actions *ngIf="stats.pendingApprovalPosts > 0">
+      <mat-card-actions>
         <span class="alert-badge">
-          <mat-icon>warning</mat-icon>
-          Needs Attention
+          <mat-icon>arrow_forward</mat-icon>
+          View
         </span>
       </mat-card-actions>
     </mat-card>
 
-    <mat-card class="stat-card stat-card-success">
-      <mat-card-content>
-        <div class="stat-icon">
-          <mat-icon>check_circle</mat-icon>
-        </div>
+    <!-- Rejected Posts -->
+    <mat-card class="stat-card danger mat-elevation-z3">
+      <mat-card-content class="card-content">
+        <div class="stat-icon"><mat-icon>cancel</mat-icon></div>
         <div class="stat-info">
-          <h2 class="stat-value">{{ stats.approvedPosts }}</h2>
-          <p class="stat-label">Approved Posts</p>
+          <h2>{{ stats.rejectedPosts }}</h2>
+          <p>Rejected Posts</p>
         </div>
       </mat-card-content>
     </mat-card>
 
-    <mat-card class="stat-card stat-card-danger">
-      <mat-card-content>
-        <div class="stat-icon">
-          <mat-icon>cancel</mat-icon>
-        </div>
+    <!-- Resolved Posts -->
+    <mat-card class="stat-card info mat-elevation-z3">
+      <mat-card-content class="card-content">
+        <div class="stat-icon"><mat-icon>task_alt</mat-icon></div>
         <div class="stat-info">
-          <h2 class="stat-value">{{ stats.rejectedPosts }}</h2>
-          <p class="stat-label">Rejected Posts</p>
+          <h2>{{ stats.resolvedPosts }}</h2>
+          <p>Resolved Posts</p>
         </div>
       </mat-card-content>
     </mat-card>
-
-    <mat-card class="stat-card stat-card-info">
-      <mat-card-content>
-        <div class="stat-icon">
-          <mat-icon>task_alt</mat-icon>
-        </div>
-        <div class="stat-info">
-          <h2 class="stat-value">{{ stats.resolvedPosts }}</h2>
-          <p class="stat-label">Resolved Posts</p>
-        </div>
-      </mat-card-content>
-    </mat-card>
-
-    <!-- Users Stats -->
+      <!-- Users Stats -->
     <mat-card class="stat-card stat-card-primary">
       <mat-card-content>
         <div class="stat-icon">
@@ -95,8 +74,7 @@
         </div>
       </mat-card-content>
     </mat-card>
-
-    <mat-card class="stat-card stat-card-success">
+      <mat-card class="stat-card stat-card-success">
       <mat-card-content>
         <div class="stat-icon">
           <mat-icon>person</mat-icon>
@@ -107,7 +85,6 @@
         </div>
       </mat-card-content>
     </mat-card>
-
     <mat-card class="stat-card stat-card-secondary">
       <mat-card-content>
         <div class="stat-icon">
@@ -120,8 +97,7 @@
       </mat-card-content>
     </mat-card>
   </div>
-
-  <div *ngIf="!loading && stats" class="charts-section">
+    <div *ngIf="!loading && stats" class="charts-section">
     <mat-card class="chart-card">
       <mat-card-header>
         <mat-card-title>Posts Distribution</mat-card-title>
@@ -155,12 +131,4 @@
         </div>
       </mat-card-content>
     </mat-card>
-
-    <mat-card class="info-card-large">
-      <mat-card-header>
-       
-      </mat-card-header>
-     
-    </mat-card>
-  </div>
 </div>

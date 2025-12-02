@@ -33,9 +33,17 @@ currentUser: string | null = '';
     this.currentUser = this.authService.getCurrentUser();
   }
 
-  selectView(view: string): void {
-    this.selectedView = view;
+ selectView(view: string) {
+  switch(view) {
+    case 'dashboard':
+      this.router.navigate(['/admin-dashboard']);
+      break;
+    case 'manage-posts':
+      this.router.navigate(['/admin-dashboard/manage-posts']);
+      break;
   }
+}
+
 
   logout(): void {
     this.authService.logout();

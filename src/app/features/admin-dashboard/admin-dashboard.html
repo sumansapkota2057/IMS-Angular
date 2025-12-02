@@ -50,10 +50,11 @@
           <span>Quick Actions</span>
         </div>
 
-        <a mat-list-item>
-          <mat-icon matListItemIcon>people</mat-icon>
-          <span matListItemTitle>Users</span>
-        </a>
+       <a mat-list-item routerLink="/admin-dashboard/users" routerLinkActive="active">
+  <mat-icon matListItemIcon>people</mat-icon>
+  <span matListItemTitle>Users</span>
+</a>
+
 
         <a mat-list-item>
           <mat-icon matListItemIcon>settings</mat-icon>
@@ -62,14 +63,11 @@
       </mat-nav-list>
     </mat-sidenav>
 
-    <mat-sidenav-content class="main-content">
-      <div class="content-wrapper">
-        <!-- Dashboard/Stats View -->
-        <app-stats-overview *ngIf="selectedView === 'dashboard'"></app-stats-overview>
+   <mat-sidenav-content class="main-content">
+  <div class="content-wrapper">
+    <router-outlet></router-outlet>
+  </div>
+</mat-sidenav-content>
 
-        <!-- Manage Posts View -->
-        <app-manage-posts *ngIf="selectedView === 'manage-posts'"></app-manage-posts>
-      </div>
-    </mat-sidenav-content>
   </mat-sidenav-container>
 </div>

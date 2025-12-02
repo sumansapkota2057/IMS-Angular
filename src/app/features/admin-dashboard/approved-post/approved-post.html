@@ -1,0 +1,119 @@
+<div class="approved-posts-container">
+
+ 
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Loading approved posts...</p>
+  </div>
+
+  <div *ngIf="!loading && posts.length === 0" class="empty-state">
+    <mat-icon>inbox</mat-icon>
+    <h3>No approved posts yet</h3>
+    <p>Check back later for new content!</p>
+  </div>
+
+
+  <div *ngIf="!loading && posts.length > 0 && !selectedPost" class="posts-list">
+    <mat-card *ngFor="let post of posts" class="post-card" (click)="viewPost(post)">
+      <mat-card-header>
+        <mat-card-title>{{ post.title }}</mat-card-title>
+        <mat-card-subtitle>
+          <mat-chip>{{ post.type.replace('_', ' ') }}</mat-chip>
+          <span class="post-meta">
+            <mat-icon>person</mat-icon>
+            {{ post.user?.username || 'Unknown' }}
+          </span>
+          <span class="post-meta">
+            <mat-icon>schedule</mat-icon>
+            {{ post.createdAt | date: 'medium' }}
+          </span>
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="post-preview">{{ post.description | slice:0:250 }}...</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-stroked-button color="primary">
+          <mat-icon>visibility</mat-icon>
+          View Details
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+
+  <div *ngIf="selectedPost" class="post-detail">
+    <mat-card class="detail-card">
+      <mat-card-header>
+        <button mat-icon-button (click)="closePostView()" class="back-button">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <mat-card-title>{{ selectedPost.title }}</mat-card-title>
+        <mat-card-subtitle>
+          <mat-chip>{{ selectedPost.type.replace('_', ' ') }}</mat-chip>
+          <span class="post-meta">
+            <mat-icon>person</mat-icon>
+            {{ selectedPost.user?.username || 'Unknown' }}
+          </span>
+          <span class="post-meta">
+            <mat-icon>schedule</mat-icon>
+            {{ selectedPost.createdAt | date: 'medium' }}
+          </span>
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <p class="post-description">{{ selectedPost.description }}</p>
+      </mat-card-content>
+    </mat-card>
+
+
+    <mat-card class="comments-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>comment</mat-icon>
+          Comments ({{ comments.length }})
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="commentForm" (ngSubmit)="addComment()" class="comment-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Add a comment</mat-label>
+            <textarea matInput formControlName="content" placeholder="Share your thoughts..." rows="4"></textarea>
+            <mat-error *ngIf="commentForm.get('content')?.hasError('required')">
+              Comment cannot be empty
+            </mat-error>
+          </mat-form-field>
+          <button mat-stroked-button color="primary" type="submit" [disabled]="!commentForm.valid">
+            <mat-icon>send</mat-icon> Post Comment
+          </button>
+        </form>
+
+        <div *ngIf="loadingComments" class="loading-comments">
+          <mat-spinner diameter="30"></mat-spinner>
+          <span>Loading comments...</span>
+        </div>
+
+        <div *ngIf="!loadingComments && comments.length === 0" class="no-comments">
+          <mat-icon>chat_bubble_outline</mat-icon>
+          <p>No comments yet. Be the first to comment!</p>
+        </div>
+
+        <div *ngIf="!loadingComments && comments.length > 0" class="comments-list">
+          <div *ngFor="let comment of comments" class="comment-item">
+            <div class="comment-header">
+              <mat-icon>account_circle</mat-icon>
+              <span class="comment-author">{{ comment.username || 'Unknown' }}</span>
+              <span class="comment-date">{{ comment.createdAt | date: 'short' }}</span>
+              <button mat-icon-button color="warn" *ngIf="comment.username === currentUser"
+                      (click)="deleteComment(comment.id!)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+            <p class="comment-content">{{ comment.content }}</p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

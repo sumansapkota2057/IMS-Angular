@@ -91,14 +91,29 @@ export class ManagePosts implements OnInit {
 
   
 
-  applyFilter(): void {
-    const postsWithoutDraft = this.posts.filter(p => p.status !== PostStatus.DRAFT);
-    if (this.filterStatus === 'ALL') {
-      this.filteredPosts = [...postsWithoutDraft];
-    } else {
-      this.filteredPosts = postsWithoutDraft.filter(post => post.status === this.filterStatus);
-    }
+ applyFilter(): void {
+  const postsWithoutDraft = this.posts.filter(p => p.status !== PostStatus.DRAFT);
+
+  if (this.filterStatus === 'ALL') {
+    this.filteredPosts = [...postsWithoutDraft];
+  } else {
+    this.filteredPosts = postsWithoutDraft.filter(
+      post => post.status === this.filterStatus
+    );
   }
+  if (this.filterStatus === PostStatus.APPROVED) {
+    this.filteredPosts.sort(
+      (a, b) => new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
+    );
+  }
+  else {
+    this.filteredPosts.sort(
+      (a, b) => new Date(a.createdAt!).getTime() - new Date(b.createdAt!).getTime()
+    );
+  }
+}
+
+  
 
   onFilterChange(status: string): void {
     this.filterStatus = status;

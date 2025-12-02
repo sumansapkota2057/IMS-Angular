@@ -4,6 +4,7 @@ import { MaterialModule } from '../../../shared/material.module';
 import { DashboardStats } from '../../../core/model/api-response.model';
 import { Dashboard } from '../../../core/services/dashboard';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
  selector: 'app-stats-overview',
@@ -18,7 +19,8 @@ export class StatsOverview implements OnInit {
 
   constructor(
     private dashboardService: Dashboard,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -43,5 +45,10 @@ export class StatsOverview implements OnInit {
     this.loadStats();
   }
 
+  
+onApprovedClick(): void {
+  console.log('Approved card clicked!'); 
+  this.router.navigate(['/admin-dashboard/approved-post']);
+}
 
 }
